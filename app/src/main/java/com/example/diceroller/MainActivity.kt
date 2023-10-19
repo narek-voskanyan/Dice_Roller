@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -17,8 +18,21 @@ class MainActivity : AppCompatActivity() {
 
         rollButton.setOnClickListener { rollDice() }
 
-
+        val mySwipeRefreshLayout: SwipeRefreshLayout = findViewById(R.id.swiperefresh)
+        mySwipeRefreshLayout.setOnRefreshListener {
+            onRefresh()
+            mySwipeRefreshLayout.setRefreshing(false)
+        }
     }
+
+    @Override
+   override fun onRefresh() {
+        rollDice()
+    }
+
+
+
+
     /**
      * Roll the dice and update the screen with the result.
      */
@@ -26,9 +40,11 @@ class MainActivity : AppCompatActivity() {
         // Create new Dice object with 6 sides and roll the dice
         val diceClassObject = Dice(6)
         val diceRoll = diceClassObject.roll()
+        val diceRollTwo = diceClassObject.roll()
 
         // Find the ImageView in the layout
         val diceImage: ImageView = findViewById(R.id.imageView)
+        val diceImageTwo: ImageView = findViewById(R.id.imageView2)
 
         // Determine which drawable resource ID to use based on the dice roll
         val drawableResource = when (diceRoll) {
@@ -39,11 +55,21 @@ class MainActivity : AppCompatActivity() {
             5 -> R.drawable.dice_5
             else -> R.drawable.dice_6
         }
+
+        val drawableResourceTwo = when(diceRollTwo) {
+            1 -> R.drawable.dice_1
+            2 -> R.drawable.dice_2
+            3 -> R.drawable.dice_3
+            4 -> R.drawable.dice_4
+            5 -> R.drawable.dice_5
+            else -> R.drawable.dice_6
+        }
         // Update the content description
         diceImage.contentDescription = diceRoll.toString()
-
+        diceImageTwo.contentDescription = diceImageTwo.toString()
         // Update the ImageView with the correct drawable resource ID
         diceImage.setImageResource(drawableResource)
+        diceImageTwo.setImageResource(drawableResourceTwo)
 
 
     }
